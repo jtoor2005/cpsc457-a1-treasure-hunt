@@ -1,36 +1,33 @@
+CPSC 457 – Fall 2025 — Assignment 1 (Parts I & II)
+==================================================
 
-CPSC 457 – Fall 2025 — Assignment 1 (Part I)
-=============================================
+Repo URL:
+  https://github.com/jtoor2005/cpsc457-a1-treasure-hunt
 
-Files included:
-- a1p1.c — C source for Part I (treasure hunt with `fork`).
-- A1_Part1_Report.pdf — brief reflection and required first‑page info placeholders.
+Files
+-----
+- a1p1.c  : Part 1 — treasure hunt with fork, exit, wait (no shared memory).
+- a1p2.c  : Part 2 — parallel prime finder using shared memory (shmget/shmat/shmdt/shmctl).
+- A1_Report.pdf : Combined report with reflections for Part 1 and Part 2.
 
-Build on cslinux servers:
-    gcc -O2 -Wall a1p1.c -o a1p1
+Build (on cslinux)
+------------------
+# Part 1
+gcc -O2 -Wall a1p1.c -o a1p1
 
-Run (redirecting an input matrix file):
-    ./a1p1 < test1.txt
+# Part 2
+gcc -O2 -Wall a1p2.c -o a1p2 -lm
 
-Expected behavior:
-- Spawns 100 children; each prints: `Child i (PID XXXX): Searching row i`
-- Parent prints final line when treasure is found, e.g.:
-    Parent: The treasure was found by child with PID 2411 at row 73 and column 652
+Run
+---
+# Part 1 (reads 100x1000 matrix from stdin)
+./a1p1 < input.txt
 
-Notes:
-- We avoid shared memory entirely (per Part I requirements).
-- Children communicate success via exit code 1; failure via exit code 0.
-- Parent maps the winning PID to its row and then scans that row to get the exact column.
+# Part 2
+./a1p2 <LOWER> <UPPER> <N>
 
-Security & Safety:
-- All children exit via `_exit(...)`; parent waits for all children (no zombies).
-
-Testing locally (with the provided inputs):
-    ./a1p1 < "Assignment 1 - Inputs/test1.txt"
-    ./a1p1 < "Assignment 1 - Inputs/test2.txt"
-    …
-
-Git URL placeholder:
-    https://example.com/your-repo.git   (replace before submission)
-
-Last updated: 2025-09-19T18:12:06
+Notes
+-----
+- Part 1 uses only exit and wait; prints per-child search lines and parent summary.
+- Part 2 caps processes to N_eff = min(N, upper-lower+1); per-child shared-memory blocks avoid locking
+- Verified on cslinux servers.
